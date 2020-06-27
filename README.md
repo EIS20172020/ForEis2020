@@ -1,10 +1,14 @@
 # ESDC项目日志
 
-设计一个机器人义警，
 
-可将摄像头放置于机械臂上
+## 项目管理
+- [git操作](./docs/Github.md)
+- .gitignore文件模板的[GitHub链接](https://github.com/github/gitignore)
 
-
+## 日程
+- 返校日期：只有天知道
+- ***ddl：none
+## 摘要
 
 ## 总体方案
 
@@ -29,7 +33,7 @@ https://www.sohu.com/a/275273295_100190264
 ## 模块设计
 
 ### 目标识别
-
+[链接](./ObjectDetection/README.md)
 
 
 ### 硬件设计
