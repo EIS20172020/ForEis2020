@@ -1,7 +1,7 @@
 from absl import logging
 import numpy as np
 import tensorflow as tf
-from cv2 import cv2
+import cv2
 
 YOLOV3_LAYER_LIST = [
     'yolo_darknet',
