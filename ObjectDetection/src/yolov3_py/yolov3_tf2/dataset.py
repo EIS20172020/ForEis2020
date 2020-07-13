@@ -136,12 +136,15 @@ def load_tfrecord_dataset(file_pattern, class_file, size=416):
 
 
 def load_fake_dataset():
+    """
+    return tf.data.Dataset.from_tensor_slices((x_train, y_train))
+    """
     x_train = tf.image.decode_jpeg(open("./data/girl.png", "rb").read(), channels=3)
         # 将JPEG编码图像解码为uint8张量.
     
     x_train = tf.expand_dims(x_train, axis=0)
-        # 在索引“axis”处添加1个大小的维度。
-    print(x_train.shape)
+        # 在索引“axis=0”处添加1个大小的维度。
+    print("x_train/val.shape: ",x_train.shape)
     
     labels = [
         [0.18494931, 0.03049111, 0.9435849, 0.96302897, 0],
@@ -150,24 +153,10 @@ def load_fake_dataset():
     ] + [[0, 0, 0, 0, 0]] * 5
     y_train = tf.convert_to_tensor(labels, tf.float32)
     y_train = tf.expand_dims(y_train, axis=0)
-    print(y_train.shape)
+    print("y_train/val.shape: ",y_train.shape)
 
     return tf.data.Dataset.from_tensor_slices((x_train, y_train))
 
 
-# if __name__ == "__main__":
-#     x_train=tf.image.decode_jpeg(open("./data/mnist_train_jpg_60000/0_5.jpg","rb").read(),channels=3)
-#     labels = [
-#         [0.18494931, 0.03049111, 0.9435849, 0.96302897, 0],
-#         [0.01586703, 0.35938117, 0.17582396, 0.6069674, 56],
-#         [0.09158827, 0.48252046, 0.26967454, 0.6403017, 67],
-#     ] + [[0, 0, 0, 0, 0]] * 5
-#     y_train = tf.convert_to_tensor(labels, tf.float32)
-#     x_train=tf.expand_dims(x_train,axis=0)
-#     y_train = tf.expand_dims(y_train, axis=0)
 
-#     print(x_train.shape,'---',y_train.shape)
-
-#     dataset=tf.data.Dataset.from_tensor_slices((x_train,y_train))
-#     print(dataset)
 

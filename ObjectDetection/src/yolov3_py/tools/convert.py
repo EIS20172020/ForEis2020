@@ -6,9 +6,9 @@ from yolov3_tf2.utils import load_darknet_weights
 import tensorflow as tf
 
 FLAGS = flags.FLAGS
-flags.DEFINE_string('weights', './data/yolov3.weights', 'path to weights file')
-flags.DEFINE_string('output', './checkpoints/yolov3.tf', 'path to output')
-flags.DEFINE_boolean('tiny', False, 'yolov3 or yolov3-tiny')
+flags.DEFINE_string('weights', './data/yolov3-tiny.weights', 'path to weights file')
+flags.DEFINE_string('output', './checkpoints/yolov3-tiny.tf', 'path to output')
+flags.DEFINE_boolean('tiny', True, 'yolov3 or yolov3-tiny')
 flags.DEFINE_integer('num_classes', 80, 'number of classes in the model')
 
 

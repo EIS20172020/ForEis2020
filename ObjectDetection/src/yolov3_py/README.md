@@ -63,7 +63,7 @@ https://www.nvidia.com/Download/index.aspx
 ```bash
 # yolov3
 wget https://pjreddie.com/media/files/yolov3.weights -O data/yolov3.weights
-python convert.py
+python convert.py --weights ./data/yolov3.weights --output ./checkpoints/yolov3.tf
 
 # yolov3-tiny
 wget https://pjreddie.com/media/files/yolov3-tiny.weights -O data/yolov3-tiny.weights
@@ -74,11 +74,7 @@ python convert.py --weights ./data/yolov3-tiny.weights --output ./checkpoints/yo
 
 ```bash
 # yolov3
-python detect.py --image ./data/meme.jpg --output ./data/meme_output.jpg
-python detect.py --image ./data/meme2.jpeg --output ./data/meme2_output.jpeg
-python detect.py --image ./data/girl.png --output ./data/girl_output.png
-python detect.py --image ./data/street.jpg --output ./data/street_output.jpg 
-
+python detect.py --image ./data/meme.jpg
 
 # yolov3-tiny
 python detect.py --weights ./checkpoints/yolov3-tiny.tf --tiny --image ./data/street.jpg
@@ -91,14 +87,11 @@ python detect_video.py --video path_to_file.mp4 --weights ./checkpoints/yolov3-t
 
 # video file with output
 python detect_video.py --video path_to_file.mp4 --output ./output.avi
-
 ```
 
 ### Training
 
-I have created a complete tutorial（教程） on how to train from scratch using the VOC2012 Dataset.
-使用VOC2020数据集
-
+I have created a complete tutorial on how to train from scratch using the VOC2012 Dataset.
 See the documentation here https://github.com/zzh8829/yolov3-tf2/blob/master/docs/training_voc.md
 
 For customzied training, you need to generate tfrecord following the TensorFlow Object Detection API.

@@ -22,20 +22,23 @@ flags.DEFINE_integer('num_classes', 80, 'number of classes in the model')
 
 
 def main(_argv):
+    # 配置GPU
     physical_devices = tf.config.experimental.list_physical_devices('GPU')
     if len(physical_devices) > 0:
         tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
     if FLAGS.tiny:
         yolo = YoloV3Tiny(classes=FLAGS.num_classes)
+        logging.info('-- model loaded: yolov3 tiny')
     else:
         yolo = YoloV3(classes=FLAGS.num_classes)
+        logging.info('-- model loaded: yolov3')
 
     yolo.load_weights(FLAGS.weights).expect_partial()
-    logging.info('weights loaded')
+    logging.info('-- weights loaded: ')
 
     class_names = [c.strip() for c in open(FLAGS.classes).readlines()]
-    logging.info('classes loaded')
+    logging.info('-- classes loaded：')
 
     if FLAGS.tfrecord:
         dataset = load_tfrecord_dataset(

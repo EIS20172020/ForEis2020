@@ -4,6 +4,7 @@ from absl.flags import FLAGS
 import tensorflow as tf
 import numpy as np
 import cv2
+import os
 from tensorflow.keras.callbacks import (
     ReduceLROnPlateau,
     EarlyStopping,
@@ -47,9 +48,13 @@ flags.DEFINE_integer('weights_num_classes', None, 'specify num class for `weight
 def main(_argv):
     # 使用gpu加速
     # tensorflow-gpu config
-    physical_devices = tf.config.experimental.list_physical_devices('GPU')
+    physical_devices = tf.config.experimental.list_physical_devices(device_type='GPU')
+    print(os.system('nvidia-smi'))
     if len(physical_devices) > 0:
-        tf.config.experimental.set_memory_growth(physical_devices[0], True)
+        try:
+            tf.config.experimental.set_memory_growth(physical_devices[0], True)
+        except:
+            print('\nno physical devices available!\n')
 
     # 加载模型
     # yolov3 or yolov3-tiny
@@ -66,13 +71,17 @@ def main(_argv):
     model.summary()
 
     # https://blog.csdn.net/DumpDoctorWang/article/details/84028957
-    train_dataset = dataset.load_fake_dataset()
-    
+
+    # 载入数据集
     if FLAGS.dataset:
         # 如果指定数据集
         train_dataset = dataset.load_tfrecord_dataset(
             FLAGS.dataset, FLAGS.classes, FLAGS.size)
+    else:
+        train_dataset = dataset.load_fake_dataset()
+    # 数据集乱序
     train_dataset = train_dataset.shuffle(buffer_size=512)
+    # dataset的batch
     train_dataset = train_dataset.batch(FLAGS.batch_size)
     train_dataset = train_dataset.map(lambda x, y: (
         dataset.transform_images(x, FLAGS.size),
@@ -80,10 +89,12 @@ def main(_argv):
     train_dataset = train_dataset.prefetch(
         buffer_size=tf.data.experimental.AUTOTUNE)
 
-    val_dataset = dataset.load_fake_dataset()
+    # 载入训练集
     if FLAGS.val_dataset:
         val_dataset = dataset.load_tfrecord_dataset(
             FLAGS.val_dataset, FLAGS.classes, FLAGS.size)
+    else:
+        val_dataset = dataset.load_fake_dataset()
     val_dataset = val_dataset.batch(FLAGS.batch_size)
     val_dataset = val_dataset.map(lambda x, y: (
         dataset.transform_images(x, FLAGS.size),
@@ -116,7 +127,6 @@ def main(_argv):
                     l.set_weights(model_pretrained.get_layer(
                         l.name).get_weights())
                     freeze_all(l)
-
     else:
         # All other transfer require matching classes
         model.load_weights(FLAGS.weights)
@@ -128,10 +138,11 @@ def main(_argv):
             # freeze everything
             freeze_all(model)
 
+    # 选择优化器
     optimizer = tf.keras.optimizers.Adam(lr=FLAGS.learning_rate)
-    loss = [YoloLoss(anchors[mask], classes=FLAGS.num_classes)
-            for mask in anchor_masks]
+    loss = [YoloLoss(anchors[mask], classes=FLAGS.num_classes) for mask in anchor_masks]
 
+    
     if FLAGS.mode == 'eager_tf':
         # Eager mode is great for debugging
         # Non eager graph mode is recommended for real training
@@ -180,14 +191,18 @@ def main(_argv):
             model.save_weights(
                 'checkpoints/yolov3_train_{}.tf'.format(epoch))
     else:
+        
         model.compile(optimizer=optimizer, loss=loss,
                       run_eagerly=(FLAGS.mode == 'eager_fit'))
 
         callbacks = [
             ReduceLROnPlateau(verbose=1),
             EarlyStopping(patience=3, verbose=1),
-            ModelCheckpoint('checkpoints/yolov3_train_{epoch}.tf',
-                            verbose=1, save_weights_only=True),
+            tf.keras.callbacks.ModelCheckpoint(
+                filepath=FLAGS.weights,
+                verbose=1,
+                save_weights_only=True,
+                save_best_only=True),
             TensorBoard(log_dir='logs')
         ]
 
