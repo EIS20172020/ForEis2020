@@ -9,8 +9,8 @@ python ./tools/train.py ^
     --mode fit ^
     --transfer darknet ^
     --size 416 ^
-    --epochs 5 ^
-    --batch_size 4 ^
+    --epochs 100 ^
+    --batch_size 1 ^
     --learning_rate 1e-3 ^
     --num_classes 1 ^
     --weights_num_classes 80

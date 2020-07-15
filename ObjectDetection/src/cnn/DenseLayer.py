@@ -28,4 +28,5 @@ model = tf.keras.Sequential([
     DenseLayer(10, activation='relu'),
     DenseLayer(2, activation='softmax')
 ])
+
 model.summary()

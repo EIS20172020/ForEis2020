@@ -1,6 +1,10 @@
-tensorflow-gpu==2.1.0
-opencv-python==4.1.1.26
+tensorflow-gpu
+tensorboard
+opencv-python
+absl-py
 lxml
 tqdm
+numpy
+matplotlib
 
 -e .

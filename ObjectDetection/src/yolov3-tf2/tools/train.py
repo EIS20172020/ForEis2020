@@ -1,26 +1,19 @@
-import sys,os
+import os
+import sys
 sys.path.append(os.path.abspath(os.path.dirname(__file__)+'/'+'..'))
-
+import cv2
+import numpy as np
+import tensorflow as tf
 from absl import app, flags, logging
 from absl.flags import FLAGS
 
-import tensorflow as tf
-import numpy as np
-import cv2
-from tensorflow.keras.callbacks import (
-    ReduceLROnPlateau,
-    EarlyStopping,
-    ModelCheckpoint,
-    TensorBoard
-)
-
-from yolov3_tf2.models import (
-    YoloV3, YoloV3Tiny, YoloLoss,
-    yolo_anchors, yolo_anchor_masks,
-    yolo_tiny_anchors, yolo_tiny_anchor_masks
-)
-from yolov3_tf2.utils import freeze_all
 import yolov3_tf2.dataset as dataset
+from yolov3_tf2.models import (YoloLoss, YoloV3, YoloV3Tiny, yolo_anchor_masks,
+                               yolo_anchors, yolo_tiny_anchor_masks,
+                               yolo_tiny_anchors)
+from yolov3_tf2.utils import freeze_all
+
+
 
 flags.DEFINE_string('dataset', '', 'path to dataset')
 flags.DEFINE_string('val_dataset', '', 'path to validation dataset')
@@ -179,11 +172,28 @@ def main(_argv):
                       run_eagerly=(FLAGS.mode == 'eager_fit'))
 
         callbacks = [
-            ReduceLROnPlateau(verbose=1),
-            EarlyStopping(patience=3, verbose=1),
-            ModelCheckpoint('checkpoints/yolov3_train_{epoch}.tf',
-                            verbose=1, save_weights_only=True,save_best_only=True),
-            TensorBoard(log_dir='logs')
+            tf.keras.callbacks.ReduceLROnPlateau(
+                verbose=1,
+                factor=0.2,
+                patience=3,
+                cooldown=0
+            ),
+            tf.keras.callbacks.EarlyStopping(patience=3, verbose=1),
+            tf.keras.callbacks.ModelCheckpoint(
+                filepath='checkpoints/yolov3_train.tf',
+                verbose=0,
+                save_weights_only=True,
+                save_best_only=True
+            ),
+            tf.keras.callbacks.ModelCheckpoint(
+                filepath='./checkpoints/yolov3_train.ckpt',
+                monitor='val_acc',
+                mode='max',
+                verbose=1,
+                save_weights_only=True,
+                save_best_only=True
+            ),
+            tf.keras.callbacks.TensorBoard(log_dir='logs')
         ]
 
         history = model.fit(train_dataset,
