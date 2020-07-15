@@ -1,5 +1,7 @@
 *.h5
 *.weights
+*.ckpt
+*.tf
 *.tar
 *.tfrecord
 /checkpoints/*
@@ -7,7 +9,7 @@
 /logs/
 /Untitled.ipynb
 /output.jpg
-/data/dataset/
+/data/dataset
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
