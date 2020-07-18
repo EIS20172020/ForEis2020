@@ -27,6 +27,12 @@
 
 ### 目标识别
 [Yolov3原理](./ObjectDetection/README.md)
+#### 进度
+- [x] 模型搭建
+-  Making VOC data sets and convert to tfrecord
+- [ ] 模型训练 
+- [ ] 模型搭建
+- [ ] 模型部署
 
 
 ### 硬件设计
