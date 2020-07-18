@@ -12,7 +12,7 @@
 
 ## 总体方案
 
-![01总体框架](D:\Tencent Files\2550319354\1A 鬼木士\嵌入式\项目日志\ESDC项目日志\img\01总体框架.jpg)
+![01总体框架](https://github.com/EIS20172020/ForEis2020/blob/master/img/01%E6%80%BB%E4%BD%93%E6%A1%86%E6%9E%B6.jpg)
 
 ## 主要问题
 
