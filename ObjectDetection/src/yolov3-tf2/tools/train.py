@@ -20,7 +20,7 @@ flags.DEFINE_string('val_dataset', '', 'path to validation dataset')
 flags.DEFINE_boolean('tiny', False, 'yolov3 or yolov3-tiny')
 flags.DEFINE_string('weights', './checkpoints/yolov3.tf',
                     'path to weights file')
-flags.DEFINE_string('classes', './data/coco.names', 'path to classes file')
+flags.DEFINE_string('classes', './data/classes/coco.names', 'path to classes file')
 flags.DEFINE_enum('mode', 'fit', ['fit', 'eager_fit', 'eager_tf'],
                   'fit: model.fit, '
                   'eager_fit: model.fit(run_eagerly=True), '
@@ -174,11 +174,11 @@ def main(_argv):
         callbacks = [
             tf.keras.callbacks.ReduceLROnPlateau(
                 verbose=1,
-                factor=0.2,
-                patience=3,
+                factor=0.3,
+                patience=5,
                 cooldown=0
             ),
-            tf.keras.callbacks.EarlyStopping(patience=3, verbose=1),
+            tf.keras.callbacks.EarlyStopping(patience=5, verbose=1),
             tf.keras.callbacks.ModelCheckpoint(
                 filepath='checkpoints/yolov3_train.tf',
                 verbose=0,

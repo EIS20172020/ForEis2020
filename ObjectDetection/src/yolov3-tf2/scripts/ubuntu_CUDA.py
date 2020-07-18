@@ -1,5 +1,5 @@
-from .run_command import run_command
-
+import os
 
 command='ubuntu-drivers devices'
-run_command(command)
+print(command)
+os.system(command)

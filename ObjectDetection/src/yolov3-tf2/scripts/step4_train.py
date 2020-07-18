@@ -1,21 +1,26 @@
-from .run_command import run_command
+import os
 
-# Get file list, and save list into txt
-command='python '+'./tools/train.py'+' '\
-    '--dataset ./data/voc2012_train_runway.tfrecord'+' '\
-    '--val_dataset ./data/voc2012_val_runway.tfrecord'+' '\
-    '--weights ./checkpoints/yolov3.tf'+' '\
-    '--classes ./data/runway.names'+' '\
-    '--mode fit'+' '\
-    '--transfer darknet'+' '\
-    '--size 416'+' '\
-    '--epochs 100'+' '\
-    '--batch_size 1'+' '\
-    '--learning_rate 1e-3'+' '\
-    '--num_classes 1'+' '\
-    '--weights_num_classes 80'
-run_command(command)
+print('Train')
+'''
+parameter list
+'''
+dataset_dir = './data/dataset/runway_VOC2012/'
+class_path = './data/classes/runway.names'
+class_name = 'runway'
 
-
-command='ubuntu-drivers devices'
-run_command(command)
+command = ''
+command += 'python ' + './tools/train.py' + ' '
+command += '--dataset ./data/tfrecords/voc2012_train_' + class_name + '.tfrecord' + ' '
+command += '--val_dataset ./data/tfrecords/voc2012_val_' + class_name + '.tfrecord' + ' '
+command += '--weights ./checkpoints/yolov3.tf' + ' '
+command += '--classes ./data/classes/' + class_name + '.names' + ' '
+command += '--mode fit' + ' '
+command += '--transfer darknet' + ' '
+command += '--size 416' + ' '
+command += '--epochs 100' + ' '
+command += '--batch_size 4' + ' '
+command += '--learning_rate 1e-3' + ' '
+command += '--num_classes 1' + ' '
+command += '--weights_num_classes 80'
+print(command)
+os.system(command)
