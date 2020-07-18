@@ -1,6 +1,6 @@
 
 python ./tools/detect.py ^
-	--classes ./data/runway.names ^
+	--classes ./data/classes/runway.names ^
 	--num_classes 1 ^
 	--weights ./checkpoints/yolov3_train.tf ^
 	--image ./data/runway.jpg ^

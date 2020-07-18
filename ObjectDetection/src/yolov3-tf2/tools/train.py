@@ -174,11 +174,11 @@ def main(_argv):
         callbacks = [
             tf.keras.callbacks.ReduceLROnPlateau(
                 verbose=1,
-                factor=0.3,
-                patience=5,
+                factor=0.2,
+                patience=3,
                 cooldown=0
             ),
-            tf.keras.callbacks.EarlyStopping(patience=5, verbose=1),
+            tf.keras.callbacks.EarlyStopping(patience=3, verbose=1),
             tf.keras.callbacks.ModelCheckpoint(
                 filepath='checkpoints/yolov3_train.tf',
                 verbose=0,
