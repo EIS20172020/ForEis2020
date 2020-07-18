@@ -12,7 +12,7 @@
 
 ## 总体方案
 
-![01总体框架](https://github.com/EIS20172020/ForEis2020/blob/master/img/01%E6%80%BB%E4%BD%93%E6%A1%86%E6%9E%B6.jpg)
+![01总体框架](https://img-blog.csdnimg.cn/20200625205524640.png)
 
 ## 主要问题
 
