@@ -17,10 +17,10 @@ from tensorflow.python.eager import def_function
 from tensorflow.python.framework import tensor_spec
 from tensorflow.python.util import nest
 
-flags.DEFINE_string('weights', './checkpoints/yolov3_train.tf',
+flags.DEFINE_string('weights', './checkpoints/yolov3-tiny.tf',
                     'path to weights file')
-flags.DEFINE_boolean('tiny', False, 'yolov3 or yolov3-tiny')
-flags.DEFINE_string('output', './checkpoints/yolov3.tflite',
+flags.DEFINE_boolean('tiny', True, 'yolov3 or yolov3-tiny')
+flags.DEFINE_string('output', './checkpoints/yolov3-tiny.tflite',
                     'path to saved_model')
 flags.DEFINE_string('classes', './data/classes/runway.names', 'path to classes file')
 flags.DEFINE_string('image', './data/runway.jpg', 'path to input image')
@@ -41,6 +41,7 @@ def main(_argv):
     tflite_model = converter.convert()
     open(FLAGS.output, 'wb').write(tflite_model)
     logging.info("model saved to: {}".format(FLAGS.output))
+    os.system('pause')
 
     interpreter = tf.lite.Interpreter(model_path=FLAGS.output)
     interpreter.allocate_tensors()

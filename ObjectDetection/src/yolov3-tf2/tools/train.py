@@ -56,10 +56,9 @@ def main(_argv):
         anchors = yolo_anchors
         anchor_masks = yolo_anchor_masks
 
-    train_dataset = dataset.load_fake_dataset()
-    if FLAGS.dataset:
-        train_dataset = dataset.load_tfrecord_dataset(
-            FLAGS.dataset, FLAGS.classes, FLAGS.size)
+    
+    train_dataset = dataset.load_tfrecord_dataset(
+        FLAGS.dataset, FLAGS.classes, FLAGS.size)
     train_dataset = train_dataset.shuffle(buffer_size=512)
     train_dataset = train_dataset.batch(FLAGS.batch_size)
     train_dataset = train_dataset.map(lambda x, y: (
@@ -68,10 +67,9 @@ def main(_argv):
     train_dataset = train_dataset.prefetch(
         buffer_size=tf.data.experimental.AUTOTUNE)
 
-    val_dataset = dataset.load_fake_dataset()
-    if FLAGS.val_dataset:
-        val_dataset = dataset.load_tfrecord_dataset(
-            FLAGS.val_dataset, FLAGS.classes, FLAGS.size)
+    
+    val_dataset = dataset.load_tfrecord_dataset(
+        FLAGS.val_dataset, FLAGS.classes, FLAGS.size)
     val_dataset = val_dataset.batch(FLAGS.batch_size)
     val_dataset = val_dataset.map(lambda x, y: (
         dataset.transform_images(x, FLAGS.size),
@@ -167,6 +165,8 @@ def main(_argv):
             avg_val_loss.reset_states()
             model.save_weights(
                 'checkpoints/yolov3_train_{}.tf'.format(epoch))
+            model.save_weights(
+                'checkpoints/yolov3_train_{}.ckpt'.format(epoch))
     else:
         model.compile(optimizer=optimizer, loss=loss,
                       run_eagerly=(FLAGS.mode == 'eager_fit'))
@@ -180,19 +180,17 @@ def main(_argv):
             ),
             tf.keras.callbacks.EarlyStopping(patience=3, verbose=1),
             tf.keras.callbacks.ModelCheckpoint(
-                filepath='checkpoints/yolov3_train.tf',
-                verbose=0,
-                save_weights_only=True,
-                save_best_only=True
-            ),
-            tf.keras.callbacks.ModelCheckpoint(
-                filepath='./checkpoints/yolov3_train.ckpt',
-                monitor='val_acc',
-                mode='max',
+                filepath='./checkpoints/yolov3-tiny_train.ckpt',
                 verbose=1,
                 save_weights_only=True,
                 save_best_only=True
             ),
+            tf.keras.callbacks.ModelCheckpoint(
+                filepath='./checkpoints/yolov3-tiny_train.tf',
+                verbose=0,
+                save_weights_only=True,
+                save_best_only=True
+            ),            
             tf.keras.callbacks.TensorBoard(log_dir='logs')
         ]
 
@@ -200,6 +198,14 @@ def main(_argv):
                             epochs=FLAGS.epochs,
                             callbacks=callbacks,
                             validation_data=val_dataset)
+    
+    
+    saved_model_dir='./model/yolov3-tiny_train'
+    model.save(saved_model_dir)
+    converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_dir)
+    tflite_model = converter.convert()
+    open('model_tflite.tflite', 'wb').write(tflite_model)
+
 
 
 if __name__ == '__main__':
